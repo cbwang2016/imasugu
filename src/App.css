@@ -1,5 +1,4 @@
 .title {
-    padding-left: 8.5em;
     margin-top: 1em;
 }
 
@@ -54,7 +53,7 @@
 .desc-text {
     padding-left: .5em;
     display: inline-block;
-    width: 4em;
+    width: 4.5em;
     font-weight: bold;
 }
 
