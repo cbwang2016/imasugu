@@ -24,7 +24,7 @@ const LOADING_TEXT={
     'idle':'...',
 };
 
-const API_BASE='http://imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do';
+const API_BASE='//imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do';
 
 class Title extends Component {
     constructor(props) {
@@ -53,7 +53,7 @@ class Title extends Component {
 class PiecesBar extends Component {
     constructor(props) {
         super(props);
-        let sel_prop=props.pieces.length>1?props.pieces[1]:props.pieces[0];
+        let sel_prop=props.initial;
         props.do_setfilter(sel_prop,sel_prop);
         this.state={
             sel_base: sel_prop,
@@ -141,7 +141,7 @@ function Footer(props) {
                 教室黑名单：
                 {Object.keys(props.blacklist).map((k)=>props.blacklist[k].map((r)=>k+r).join('、')).filter((x)=>x).join('、')}
             </p>
-            <p>你应该已经发现了在页面顶部可以点击并拖拽来筛选</p>
+            <p>你应该发现了在页面顶部可以点击并拖拽来筛选</p>
             <p>数据来源于校内信息门户 &copy;xmcp</p>
             <br />
         </div>
@@ -171,15 +171,15 @@ class App extends Component {
     static get_start_piece() {
         //return 5;//////
         let now=new Date();
-        for(let i=2;i<TIMEPIECES.length;i++)
+        for(let i=1;i<TIMEPIECES.length-1;i++)
             if(now.getHours()<TIMEPIECES[i][0] || (now.getHours()===TIMEPIECES[i][0] && now.getMinutes()<TIMEPIECES[i][1]))
-                return i-1;
+                return i;
         return TIMEPIECES.length-1; // impossible
     }
     static get_current_pieces() {
         let start=this.get_start_piece();
         let ret=[];
-        for(let i=start;i<TIMEPIECES.length-1;i++)
+        for(let i=Math.max(1,start-1);i<TIMEPIECES.length-1;i++)
             ret.push(i);
         if(ret.length===0) // impossible
             throw Error('no timepieces');
@@ -235,7 +235,7 @@ class App extends Component {
         return (
             <div>
                 <Title />
-                <PiecesBar pieces={this.state.timepieces} do_setfilter={this.on_setfilter.bind(this)} />
+                <PiecesBar pieces={this.state.timepieces} initial={App.get_start_piece()} do_setfilter={this.on_setfilter.bind(this)} />
                 {Object.keys(this.state.loading_status).map((name)=>(
                     <div key={name}>
                         <div className="building-bar">
