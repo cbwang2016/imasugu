@@ -1,11 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import './App.css';
 
 const BLACKLIST={
     '理教': ['109','111','308'],
+    '一教': [],
     '二教': [],
     '三教': [],
+    '四教': [],
+    '文史': [],
+    '地学': [],
 };
+const BUILDINGS=['理教','一教','二教','三教','四教','文史','地学'];
+const AUTO_LOADING=['理教','二教'];
 
 const TIMEPIECES=[
     [-1,-1],
@@ -21,12 +27,12 @@ const LOADING_TEXT={
     'done':'',
     'loading':'加载中',
     'failed':'加载失败',
-    'idle':'...',
+    'idle':'',
 };
 
 const API_BASE='//imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do';
 
-class Title extends Component {
+class Title extends PureComponent {
     constructor(props) {
         super(props);
         this.state={
@@ -50,7 +56,7 @@ class Title extends Component {
     }
 }
 
-class PiecesBar extends Component {
+class PiecesBar extends PureComponent {
     constructor(props) {
         super(props);
         let sel_prop=props.initial;
@@ -108,29 +114,45 @@ class PiecesBar extends Component {
     }
 }
 
-function Details(props) {
-    if(props.data===null) return null;
+class PieceBox extends PureComponent {
+    render() {
+        return (
+            <span className={'piece'+(this.props.variant ? ' '+this.props.variant : '')}>
+                {(this.props.text||'').substr(1)}
+            </span>
+        );
+    }
+}
 
-    let filter=props.filter.map((f)=>'c'+f);
-    let pieces=props.pieces.map((p)=>'c'+p);
-    let building=props.data.filter((b)=>props.blacklist.indexOf(b.room)===-1 && filter.every((f)=>b[f]===''));
+class Details extends PureComponent {
+    render() {
+        if(this.props.data===null) return (
+            <div className="details-block details-block-empty" />
+        );
 
-    return (
-        <div>
-            {building.map((b)=>(
-                <div key={b.room} className="room">
-                    <span className="desc-text">{b.room} <small>{b.cap}人</small></span>
-                    {pieces.map((p)=>(
-                        b[p]==='' ?
-                            <span key={p} className={'piece'+(filter.indexOf(p)!==-1 ? ' piece-highlight' : '')}>
-                                {p.substr(1)}
-                            </span> :
-                            <span key={p} className="piece piece-no" />
-                    ))}
-                </div>
-            ))}
-        </div>
-    );
+        let filter=this.props.filter.map((f)=>'c'+f);
+        let pieces=this.props.pieces.map((p)=>'c'+p);
+        let building=this.props.data;
+
+        return (
+            <div className="details-block">
+                {building.map((b)=>
+                    <div key={b.room} className={'room'+((
+                                this.props.blacklist.indexOf(b.room)===-1 && filter.every((f)=>b[f]==='')
+                            ) ? ' room-visible' : ' room-hidden')}>
+                        <span className="desc-text">{b.room} <small>{b.cap}人</small></span>
+                        {pieces.map((p)=>(
+                            b[p]==='' ? (
+                                <PieceBox key={p} variant={filter.indexOf(p)!==-1 ? 'piece-highlight' : null} text={p} />
+                            ) : (
+                                <PieceBox key={p} variant="piece-no" />
+                            )
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    }
 }
 
 function Footer(props) {
@@ -150,19 +172,17 @@ function Footer(props) {
 
 class App extends Component {
     constructor(props) {
+        function mk_obj(keys,value) {
+            let res={};
+            for(let key of keys)
+                res[key]=value;
+            return res;
+        }
         super(props);
         let pieces=App.get_current_pieces();
         this.state={
-            loading_status: {
-                '理教': 'idle',
-                '二教': 'idle',
-                '三教': 'idle',
-            },
-            data: {
-                '理教': null,
-                '二教': null,
-                '三教': null,
-            },
+            loading_status: mk_obj(BUILDINGS,'idle'),
+            data: mk_obj(BUILDINGS,null),
             timepieces: pieces,
             filter: [],
         }
@@ -217,7 +237,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        Object.keys(this.state.loading_status).forEach((name)=>{
+        AUTO_LOADING.forEach((name)=>{
             this.load_data(name);
         });
     }
@@ -226,9 +246,10 @@ class App extends Component {
         let res=[];
         for(let i=begin;i<=end;i++)
             res.push(i);
-        this.setState({
-            filter: res
-        });
+        if(this.state.filter[0]!==res[0] || this.state.filter.length!==res.length)
+            this.setState({
+                filter: res
+            });
     }
 
     render() {
@@ -240,14 +261,15 @@ class App extends Component {
                     <div key={name}>
                         <div className="building-bar">
                             {name}
-                            <span className="loading-status">{LOADING_TEXT[this.state.loading_status[name]]}</span>
-                            {this.state.loading_status[name]==='failed' &&
-                                <button className="reload" onClick={()=>{this.load_data(name)}}>
-                                    重试
-                                </button>
+                            {(this.state.loading_status[name]==='failed' || this.state.loading_status[name]==='idle') &&
+                            <button className="reload" onClick={()=>{this.load_data(name)}}>
+                                加载
+                            </button>
                             }
+                            <span className="loading-status">{LOADING_TEXT[this.state.loading_status[name]]}</span>
                         </div>
-                        <Details data={this.state.data[name]} pieces={this.state.timepieces} filter={this.state.filter} blacklist={BLACKLIST[name]} />
+                        <Details data={this.state.data[name]} pieces={this.state.timepieces} filter={this.state.filter}
+                                blacklist={BLACKLIST[name]} />
                     </div>
                 ))}
                 <Footer blacklist={BLACKLIST} />

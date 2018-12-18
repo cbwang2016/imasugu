@@ -62,3 +62,26 @@
     opacity: .6;
     font-weight: normal;
 }
+
+.details-block {
+    transition: opacity 1s ease-out, max-height 2s linear;
+    max-height: 5000px;
+}
+
+.details-block-empty {
+    opacity: 0;
+    max-height: 0;
+}
+
+.details-block .piece {
+    transition: background-color .2s;
+}
+
+.room {
+    transition: max-height .2s;
+    max-height: 2.5em;
+    overflow-y: hidden;
+}
+.room-hidden {
+    max-height: 0;
+}
