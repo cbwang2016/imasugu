@@ -25,9 +25,10 @@ const TIMEPIECES=[
 
 const LOADING_TEXT={
     'done':'',
+    'collapsed': '点击显示',
     'loading':'加载中',
     'failed':'加载失败',
-    'idle':'',
+    'idle':'点击加载',
 };
 
 const API_BASE='//imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do';
@@ -127,20 +128,24 @@ class PieceBox extends PureComponent {
 class Details extends PureComponent {
     render() {
         if(this.props.data===null) return (
-            <div className="details-block details-block-empty" />
+            <div className="details-block" />
         );
 
         let filter=this.props.filter.map((f)=>'c'+f);
         let pieces=this.props.pieces.map((p)=>'c'+p);
-        let building=this.props.data;
+        let building=this.props.data||[];
 
         return (
-            <div className="details-block">
+            <div className={'details-block'+(this.props.collapsed ? '' : ' details-block-show')}>
                 {building.map((b)=>
                     <div key={b.room} className={'room'+((
                                 this.props.blacklist.indexOf(b.room)===-1 && filter.every((f)=>b[f]==='')
                             ) ? ' room-visible' : ' room-hidden')}>
-                        <span className="desc-text">{b.room} <small>{b.cap}人</small></span>
+                        <span className="desc-text">
+                            <span className="text-major">{b.room.charAt(0)}</span>
+                            {b.room.substr(1)}&nbsp;
+                            <small>{b.cap}人</small>
+                        </span>
                         {pieces.map((p)=>(
                             b[p]==='' ? (
                                 <PieceBox key={p} variant={filter.indexOf(p)!==-1 ? 'piece-highlight' : null} text={p} />
@@ -206,39 +211,53 @@ class App extends Component {
         return ret;
     }
 
-    load_data(name) {
-        this.setState((prevState)=>{
-            let state=Object.assign({},prevState);
-            state.loading_status[name]='loading';
-            return state;
-        });
-
-        fetch(API_BASE+'?buildingName='+encodeURIComponent(name)+'&time='+encodeURIComponent('今天'))
-            .then((res)=>res.json())
-            .then((json)=>{
-                if(!json.success)
-                    throw json;
-                this.setState((prevState)=>{
-                    let state=Object.assign({},prevState);
-                    state.loading_status[name]='done';
-                    state.data[name]=json.rows;
-                    return state;
-                });
-            })
-            .catch((err)=>{
-                console.trace(err);
-                this.setState((prevState)=>{
-                    let state=Object.assign({},prevState);
-                    state.loading_status[name]='failed';
-                    state.data[name]=null;
-                    return state;
-                });
+    toggle_collapse(name) {
+        if(this.state.loading_status[name]==='idle' || this.state.loading_status[name]==='failed') { // load
+            this.setState((prevState)=>{
+                let state=Object.assign({},prevState);
+                state.loading_status[name]='loading';
+                return state;
             });
+
+            fetch(API_BASE+'?buildingName='+encodeURIComponent(name)+'&time='+encodeURIComponent('今天'))
+                .then((res)=>res.json())
+                .then((json)=>{
+                    if(!json.success)
+                        throw json;
+                    this.setState((prevState)=>{
+                        let state=Object.assign({},prevState);
+                        state.loading_status[name]='done';
+                        state.data[name]=json.rows;
+                        return state;
+                    });
+                })
+                .catch((err)=>{
+                    console.trace(err);
+                    this.setState((prevState)=>{
+                        let state=Object.assign({},prevState);
+                        state.loading_status[name]='failed';
+                        state.data[name]=null;
+                        return state;
+                    });
+                });
+        } else if(this.state.loading_status[name]==='done') { // done -> collapsed
+            this.setState((prevState)=>{
+                let state=Object.assign({},prevState);
+                state.loading_status[name]='collapsed';
+                return state;
+            });
+        } else if(this.state.loading_status[name]==='collapsed') { // collapsed -> done
+            this.setState((prevState)=>{
+                let state=Object.assign({},prevState);
+                state.loading_status[name]='done';
+                return state;
+            });
+        }
     }
 
     componentDidMount() {
         AUTO_LOADING.forEach((name)=>{
-            this.load_data(name);
+            this.toggle_collapse(name);
         });
     }
 
@@ -259,17 +278,12 @@ class App extends Component {
                 <PiecesBar pieces={this.state.timepieces} initial={App.get_start_piece()} do_setfilter={this.on_setfilter.bind(this)} />
                 {Object.keys(this.state.loading_status).map((name)=>(
                     <div key={name}>
-                        <div className="building-bar">
+                        <div className="building-bar" onClick={()=>{this.toggle_collapse(name)}}>
                             {name}
-                            {(this.state.loading_status[name]==='failed' || this.state.loading_status[name]==='idle') &&
-                            <button className="reload" onClick={()=>{this.load_data(name)}}>
-                                加载
-                            </button>
-                            }
                             <span className="loading-status">{LOADING_TEXT[this.state.loading_status[name]]}</span>
                         </div>
                         <Details data={this.state.data[name]} pieces={this.state.timepieces} filter={this.state.filter}
-                                blacklist={BLACKLIST[name]} />
+                                blacklist={BLACKLIST[name]} collapsed={this.state.loading_status[name]==='collapsed'} />
                     </div>
                 ))}
                 <Footer blacklist={BLACKLIST} />

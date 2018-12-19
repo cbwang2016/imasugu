@@ -4,8 +4,9 @@
 
 .loading-status {
     margin-left: 1em;
-    font-weight: lighter;
+    font-weight: normal;
     opacity: .6;
+    font-size: .8em;
 }
 
 .pieces-list, .room {
@@ -40,9 +41,9 @@
 
 .building-bar {
     font-weight: bold;
-    padding: 1em 0 .5em .5em;
+    padding: .5em;
     position: sticky;
-    top: 3em;
+    top: 3.5em;
     background-color: rgba(255,255,255,.9);
 }
 
@@ -57,6 +58,10 @@
     font-weight: bold;
 }
 
+.text-major {
+    color: #bb0000;
+}
+
 .desc-text small {
     font-size: .6em;
     opacity: .6;
@@ -64,13 +69,14 @@
 }
 
 .details-block {
-    transition: opacity 1s ease-out, max-height 2s linear;
-    max-height: 5000px;
+    max-height: 0;
+    opacity: 0;
 }
 
-.details-block-empty {
-    opacity: 0;
-    max-height: 0;
+.details-block.details-block-show {
+    transition: opacity .5s ease-out, max-height 1.5s linear;
+    opacity: 1;
+    max-height: 5000px;
 }
 
 .details-block .piece {
