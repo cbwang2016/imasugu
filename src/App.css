@@ -70,6 +70,7 @@
 
 .details-block {
     max-height: 0;
+    overflow-y: hidden;
     opacity: 0;
 }
 

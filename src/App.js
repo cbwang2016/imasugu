@@ -33,6 +33,16 @@ const LOADING_TEXT={
 
 const API_BASE='//imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do';
 
+// https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
+function fetch_with_timeout(url, options, timeout=5000) {
+    return Promise.race([
+        fetch(url,options),
+        new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('timeout')), timeout)
+        )
+    ]);
+}
+
 class Title extends PureComponent {
     constructor(props) {
         super(props);
@@ -219,7 +229,7 @@ class App extends Component {
                 return state;
             });
 
-            fetch(API_BASE+'?buildingName='+encodeURIComponent(name)+'&time='+encodeURIComponent('今天'))
+            fetch_with_timeout(API_BASE+'?buildingName='+encodeURIComponent(name)+'&time='+encodeURIComponent('今天'))
                 .then((res)=>res.json())
                 .then((json)=>{
                     if(!json.success)
