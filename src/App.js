@@ -46,7 +46,7 @@ function fetch_with_timeout(url, options, timeout=5000) {
 function Title() {
     return (
         <div>
-            <p className="title">Project <b>imasugu!</b> by @xmcp</p>
+            <p className="imsg-title">Project <b>imasugu!</b> by @xmcp</p>
         </div>
     );
 }
@@ -94,16 +94,16 @@ class PiecesBar extends PureComponent {
     render() {
         let [sel_mi,sel_ma]=this.sel_minmax();
         return (
-            <div className="pieces-list">
-                <span className="desc-text">筛选时间</span>
+            <div className="imsg-pieces-list">
+                <span className="imsg-desc-text">筛选时间</span>
                 {this.props.pieces.map((p)=>(
-                    <span key={p} data-pid={p} className={'piece'+(p>=sel_mi && p<=sel_ma ? ' piece-highlight' : '')}
+                    <span key={p} data-pid={p} className={'imsg-piece'+(p>=sel_mi && p<=sel_ma ? ' imsg-piece-highlight' : '')}
                             onMouseDown={()=>{this.on_click(p)}} onMouseMove={(e)=>{if(e.buttons===1) this.on_drag(p)}}
                             onTouchStart={()=>{this.on_click(p)}} onTouchMoveCapture={(e)=>{this.fix_coord(e)}}>
                         {p}
                     </span>
                 ))}
-                <span role="img" className="piece" aria-label="NIGHT">😎</span>
+                <span role="img" className="imsg-piece" aria-label="NIGHT">😎</span>
             </div>
         )
     }
@@ -112,7 +112,7 @@ class PiecesBar extends PureComponent {
 class PieceBox extends PureComponent {
     render() {
         return (
-            <span className={'piece'+(this.props.variant ? ' '+this.props.variant : '')}>
+            <span className={'imsg-piece'+(this.props.variant ? ' '+this.props.variant : '')}>
                 {(this.props.text||'').substr(1)}
             </span>
         );
@@ -122,7 +122,7 @@ class PieceBox extends PureComponent {
 class Details extends PureComponent {
     render() {
         if(this.props.data===null) return (
-            <div className="details-block" />
+            <div className="imsg-details-block" />
         );
 
         let filter=this.props.filter.map((f)=>'c'+f);
@@ -130,13 +130,13 @@ class Details extends PureComponent {
         let building=this.props.data||[];
 
         return (
-            <div className={'details-block'+(this.props.collapsed ? '' : ' details-block-show')}>
+            <div className={'imsg-details-block'+(this.props.collapsed ? '' : ' imsg-details-block-show')}>
                 {building.map((b)=>
-                    <div key={b.room} className={'room'+((
+                    <div key={b.room} className={'imsg-room'+((
                                 this.props.blacklist.indexOf(b.room)===-1 && filter.every((f)=>b[f]==='')
-                            ) ? ' room-visible' : ' room-hidden')}>
-                        <span className="desc-text">
-                            <span className="text-major">{b.room.charAt(0)}</span>
+                            ) ? ' imsg-room-visible' : ' imsg-room-hidden')}>
+                        <span className="imsg-desc-text">
+                            <span className="imsg-text-major">{b.room.charAt(0)}</span>
                             {b.room.substr(1)}&nbsp;
                             <small>{b.cap}人</small>
                         </span>
@@ -272,9 +272,9 @@ class App extends Component {
                 <PiecesBar pieces={this.state.timepieces} initial={App.get_start_piece()} do_setfilter={this.on_setfilter.bind(this)} />
                 {Object.keys(this.state.loading_status).map((name)=>(
                     <div key={name}>
-                        <div className="building-bar" onClick={()=>{this.toggle_collapse(name)}}>
+                        <div className="imsg-building-bar" onClick={()=>{this.toggle_collapse(name)}}>
                             {name}
-                            <span className="loading-status">{LOADING_TEXT[this.state.loading_status[name]]}</span>
+                            <span className="imsg-loading-status">{LOADING_TEXT[this.state.loading_status[name]]}</span>
                         </div>
                         <Details data={this.state.data[name]} pieces={this.state.timepieces} filter={this.state.filter}
                                 blacklist={BLACKLIST[name]} collapsed={this.state.loading_status[name]==='collapsed'} />
