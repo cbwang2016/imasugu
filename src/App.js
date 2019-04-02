@@ -171,13 +171,13 @@ function Footer(props) {
 
 class App extends Component {
     constructor(props) {
+        super(props);
         function mk_obj(keys,value) {
             let res={};
             for(let key of keys)
                 res[key]=value;
             return res;
         }
-        super(props);
         let pieces=App.get_current_pieces();
         this.state={
             loading_status: mk_obj(BUILDINGS,'idle'),
@@ -213,7 +213,7 @@ class App extends Component {
                 return state;
             });
 
-            fetch_with_timeout(API_BASE+'?buildingName='+encodeURIComponent(name)+'&time='+encodeURIComponent('今天'))
+            fetch_with_timeout((this.props.api_base||API_BASE)+'?buildingName='+encodeURIComponent(name)+'&time='+encodeURIComponent('今天'))
                 .then((res)=>res.json())
                 .then((json)=>{
                     if(!json.success)
