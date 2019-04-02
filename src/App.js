@@ -267,7 +267,7 @@ class App extends Component {
 
     render() {
         return (
-            <div>
+            <div className="imasugu">
                 <Title />
                 <PiecesBar pieces={this.state.timepieces} initial={App.get_start_piece()} do_setfilter={this.on_setfilter.bind(this)} />
                 {Object.keys(this.state.loading_status).map((name)=>(

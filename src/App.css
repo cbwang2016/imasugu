@@ -1,31 +1,31 @@
-body {
+.imasugu {
     user-select: none;
     margin: 0;
     padding: 0;
     line-height: 2em;
 }
 
-p {
+.imasugu p {
     margin: 0 0 0 .5em;
 }
 
-.title {
+.imasugu .title {
     margin-top: 1em;
 }
 
-.loading-status {
+.imasugu .loading-status {
     margin-left: 1em;
     font-weight: normal;
     opacity: .6;
     font-size: .8em;
 }
 
-.pieces-list, .room {
+.imasugu .pieces-list, .room {
     white-space: nowrap;
     overflow-x: hidden;
 }
 
-.pieces-list {
+.imasugu .pieces-list {
     position: sticky;
     top: 0;
     padding: .5em 0;
@@ -34,23 +34,23 @@ p {
     border-bottom: 1px solid black;
 }
 
-.piece {
+.imasugu .piece {
     box-sizing: border-box;
     width: 2.5em;
     display: inline-block;
     margin: 3px;
 }
 
-.piece:not(.piece-no) {
+.imasugu .piece:not(.piece-no) {
     text-align: center;
     border: 1px solid black;
 }
 
-.piece-highlight {
+.imasugu .piece-highlight {
     background-color: yellow;
 }
 
-.building-bar {
+.imasugu .building-bar {
     font-weight: bold;
     padding: .5em;
     position: sticky;
@@ -58,48 +58,48 @@ p {
     background-color: rgba(255,255,255,.9);
 }
 
-.reload {
+.imasugu .reload {
     margin-left: 1em;
 }
 
-.desc-text {
+.imasugu .desc-text {
     padding-left: .5em;
     display: inline-block;
     width: 4.5em;
     font-weight: bold;
 }
 
-.text-major {
+.imasugu .text-major {
     color: #bb0000;
 }
 
-.desc-text small {
+.imasugu .desc-text small {
     font-size: .6em;
     opacity: .6;
     font-weight: normal;
 }
 
-.details-block {
+.imasugu .details-block {
     max-height: 0;
     overflow-y: hidden;
     opacity: 0;
 }
 
-.details-block.details-block-show {
+.imasugu .details-block.details-block-show {
     transition: opacity .5s ease-out, max-height 1.5s linear;
     opacity: 1;
     max-height: 5000px;
 }
 
-.details-block .piece {
+.imasugu .details-block .piece {
     transition: background-color .2s;
 }
 
-.room {
+.imasugu .room {
     transition: max-height .2s;
     max-height: 2.5em;
     overflow-y: hidden;
 }
-.room-hidden {
+.imasugu .room-hidden {
     max-height: 0;
 }
