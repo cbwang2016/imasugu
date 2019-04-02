@@ -43,28 +43,12 @@ function fetch_with_timeout(url, options, timeout=5000) {
     ]);
 }
 
-class Title extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state={
-            switch: false
-        };
-    }
-    switch() {
-        this.setState((prevState)=>({
-            switch: !prevState.switch
-        }));
-    }
-    render() {
-        return (
-            <div onClick={this.switch.bind(this)}>
-                {this.state.switch ?
-                    <p className="title">看什么看，<b>现在去自习</b>呀~</p> :
-                    <p className="title"><b>今すぐ</b>、勉強しよう~</p>
-                }
-            </div>
-        );
-    }
+function Title() {
+    return (
+        <div>
+            <p className="title">Project <b>imasugu!</b> by @xmcp</p>
+        </div>
+    );
 }
 
 class PiecesBar extends PureComponent {
@@ -209,7 +193,7 @@ class App extends Component {
         for(let i=1;i<TIMEPIECES.length-1;i++)
             if(now.getHours()<TIMEPIECES[i][0] || (now.getHours()===TIMEPIECES[i][0] && now.getMinutes()<TIMEPIECES[i][1]))
                 return i;
-        return TIMEPIECES.length-1; // impossible
+        return TIMEPIECES.length-1; // after the last course is over
     }
     static get_current_pieces() {
         let start=this.get_start_piece();
