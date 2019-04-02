@@ -142,9 +142,9 @@ class Details extends PureComponent {
                         </span>
                         {pieces.map((p)=>(
                             b[p]==='' ? (
-                                <PieceBox key={p} variant={filter.indexOf(p)!==-1 ? 'piece-highlight' : null} text={p} />
+                                <PieceBox key={p} variant={filter.indexOf(p)!==-1 ? 'imsg-piece-highlight' : null} text={p} />
                             ) : (
-                                <PieceBox key={p} variant="piece-no" />
+                                <PieceBox key={p} variant="imsg-piece-no" />
                             )
                         ))}
                     </div>
