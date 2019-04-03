@@ -206,6 +206,13 @@ class App extends Component {
     }
 
     toggle_collapse(name) {
+        function fix_building_name(rows) {
+            rows.forEach((row)=>{
+                row.room=row.room.replace(/\D/g,'');
+            });
+            return rows;
+        }
+
         if(this.state.loading_status[name]==='idle' || this.state.loading_status[name]==='failed') { // load
             this.setState((prevState)=>{
                 let state=Object.assign({},prevState);
@@ -226,7 +233,7 @@ class App extends Component {
                     this.setState((prevState)=>{
                         let state=Object.assign({},prevState);
                         state.loading_status[name]='done';
-                        state.data[name]=json.rows;
+                        state.data[name]=fix_building_name(json.rows);
                         return state;
                     });
                 })
