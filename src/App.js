@@ -216,6 +216,11 @@ class App extends Component {
             fetch_with_timeout((this.props.api_base||API_BASE).replace('{building}',encodeURIComponent(name)))
                 .then((res)=>res.json())
                 .then((json)=>{
+                    if(Array.isArray(json))
+                        json={
+                            success: true,
+                            rows: json,
+                        };
                     if(!json.success)
                         throw json;
                     this.setState((prevState)=>{
