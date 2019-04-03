@@ -4,9 +4,9 @@ import './App.css';
 const BLACKLIST={
     '理教': ['109','111','308'],
     '一教': [],
-    '二教': [],
+    '二教': ['514','523','518','526','530','521','524','528','529','516'],
     '三教': [],
-    '四教': [],
+    '四教': ['405','407','409','503','504','505','506','507','509','511'],
     '文史': [],
     '地学': [],
 };
@@ -31,7 +31,7 @@ const LOADING_TEXT={
     'idle':'点击加载',
 };
 
-const API_BASE='//imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do';
+const API_BASE='//imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do?buildingName={building}&time='+encodeURIComponent('今天');
 
 // https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
 function fetch_with_timeout(url, options, timeout=5000) {
@@ -158,7 +158,7 @@ function Footer(props) {
     return (
         <div>
             <br />
-            <p>
+            <p className="imsg-room-blacklist">
                 教室黑名单：
                 {Object.keys(props.blacklist).map((k)=>props.blacklist[k].map((r)=>k+r).join('、')).filter((x)=>x).join('、')}
             </p>
@@ -213,7 +213,7 @@ class App extends Component {
                 return state;
             });
 
-            fetch_with_timeout((this.props.api_base||API_BASE)+'?buildingName='+encodeURIComponent(name)+'&time='+encodeURIComponent('今天'))
+            fetch_with_timeout((this.props.api_base||API_BASE).replace('{building}',encodeURIComponent(name)))
                 .then((res)=>res.json())
                 .then((json)=>{
                     if(!json.success)

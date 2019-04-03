@@ -7,6 +7,7 @@
     margin: 0;
     padding: 0;
     line-height: 2em;
+    font-family: 'Segoe UI', '微软雅黑', 'Microsoft YaHei', sans-serif;
 }
 
 .imasugu p {
@@ -34,7 +35,7 @@
     top: 0;
     padding: .5em 0;
     background-color: rgba(255,255,255,.9);
-    z-index: 1;
+    z-index: 10;
     border-bottom: 1px solid black;
 }
 
@@ -106,4 +107,11 @@
 }
 .imasugu .imsg-room-hidden {
     max-height: 0;
+}
+
+.imasugu .imsg-room-blacklist {
+    font-size: .7em;
+    line-height: 1.2em;
+    opacity: .6;
+    margin-bottom: 1em;
 }
