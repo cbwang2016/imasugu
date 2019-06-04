@@ -31,7 +31,7 @@ const LOADING_TEXT={
     'idle':'点击加载',
 };
 
-const API_BASE='https://holeproxy.netlify.com/hole/proxy_building?appKey=0feb3a8a831e11e8933a0050568508a5&buildingName={building}&time='+encodeURIComponent('今天');
+const API_BASE='./hole/proxy_building?appKey=0feb3a8a831e11e8933a0050568508a5&buildingName={building}';
 
 // https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
 function fetch_with_timeout(url, options, timeout=5000) {
