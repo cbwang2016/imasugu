@@ -51,6 +51,10 @@
     border: 1px solid black;
 }
 
+.imasugu .imsg-pieces-list .imsg-piece {
+    cursor: ew-resize;
+}
+
 .imasugu .imsg-piece-highlight {
     background-color: yellow;
 }
@@ -60,6 +64,7 @@
     padding: .5em;
     position: sticky;
     top: 3.5em;
+    z-index: 5;
     background-color: rgba(255,255,255,.9);
 }
 

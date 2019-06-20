@@ -1,4 +1,6 @@
 import React, { Component, PureComponent } from 'react';
+import {ISOP_APPKEY,PKUHELPER_ROOT} from './infrastructure/const';
+
 import './App.css';
 
 const BLACKLIST={
@@ -31,7 +33,7 @@ const LOADING_TEXT={
     'idle':'点击加载',
 };
 
-const API_BASE='//imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do?buildingName={building}&time='+encodeURIComponent('今天');
+const API_BASE=`${PKUHELPER_ROOT}isop_proxy/classroom_today?appKey=${ISOP_APPKEY}&buildingName={building}`;
 
 // https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
 function fetch_with_timeout(url, options, timeout=5000) {
@@ -46,7 +48,8 @@ function fetch_with_timeout(url, options, timeout=5000) {
 function Title() {
     return (
         <div>
-            <p className="imsg-title">Project <b>imasugu!</b> by @xmcp</p>
+            <br />
+            <p>以下为今日空闲教室，点击或拖拽下面的方框来筛选时间。</p>
         </div>
     );
 }
@@ -162,8 +165,7 @@ function Footer(props) {
                 教室黑名单：
                 {Object.keys(props.blacklist).map((k)=>props.blacklist[k].map((r)=>k+r).join('、')).filter((x)=>x).join('、')}
             </p>
-            <p>你应该发现了在页面顶部可以点击并拖拽来筛选</p>
-            <p>数据来源于校内信息门户 &copy;xmcp</p>
+            <p>Based on Project <b>imasugu!</b> by @xmcp</p>
             <br />
         </div>
     )
@@ -220,7 +222,7 @@ class App extends Component {
                 return state;
             });
 
-            fetch_with_timeout((this.props.api_base||API_BASE).replace('{building}',encodeURIComponent(name)))
+            fetch_with_timeout(API_BASE.replace('{building}',encodeURIComponent(name)))
                 .then((res)=>res.json())
                 .then((json)=>{
                     if(Array.isArray(json))
