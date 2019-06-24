@@ -124,9 +124,12 @@ class PieceBox extends PureComponent {
 
 class Details extends PureComponent {
     render() {
-        if(this.props.data===null) return (
-            <div className="imsg-details-block" />
-        );
+        if(this.props.data===null) // failed or not loaded
+            return null;
+        else if(this.props.data.length===0) // empty response from isop
+            return (
+                <div className="imsg-details-block-empty">暂无数据</div>
+            );
 
         let filter=this.props.filter.map((f)=>'c'+f);
         let pieces=this.props.pieces.map((p)=>'c'+p);
@@ -162,7 +165,7 @@ function Footer(props) {
         <div>
             <br />
             <p className="imsg-room-blacklist">
-                教室黑名单：
+                下列不允许自习或需要预约的教室未显示：
                 {Object.keys(props.blacklist).map((k)=>props.blacklist[k].map((r)=>k+r).join('、')).filter((x)=>x).join('、')}
             </p>
             <p>Based on Project <b>imasugu!</b> by @xmcp</p>

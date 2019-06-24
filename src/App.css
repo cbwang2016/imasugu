@@ -95,6 +95,11 @@
     opacity: 0;
 }
 
+.imsg-details-block-empty {
+    font-size: small;
+    padding-left: 1em;
+}
+
 .imasugu .imsg-details-block.imsg-details-block-show {
     transition: opacity .5s ease-out, max-height 1.5s linear;
     opacity: 1;
