@@ -126,7 +126,7 @@ class Details extends PureComponent {
     render() {
         if(this.props.data===null) // failed or not loaded
             return null;
-        else if(this.props.data.length===0) // empty response from isop
+        else if(!this.props.collapsed && this.props.data.length===0) // empty response from isop
             return (
                 <div className="imsg-details-block-empty">暂无数据</div>
             );
