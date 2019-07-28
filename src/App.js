@@ -169,7 +169,11 @@ function Footer(props) {
                 {Object.keys(props.blacklist).map((k)=>props.blacklist[k].map((r)=>k+r).join('、')).filter((x)=>x).join('、')}
             </p>
             <p>Based on Project <b>imasugu!</b> by @xmcp</p>
-            <p>基于 GPLv3 协议在 <a href="https://github.com/pkuhelper-web/imasugu" target="_blank">GitHub</a> 开源</p>
+            <p>
+                基于&nbsp;
+                <a href="https://www.gnu.org/licenses/gpl-3.0.zh-cn.html" target="_blank">GPLv3</a>
+                &nbsp;协议在 <a href="https://github.com/pkuhelper-web/imasugu" target="_blank">GitHub</a> 开源
+            </p>
             <br />
         </div>
     )
