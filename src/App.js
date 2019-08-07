@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import {ISOP_APPKEY,PKUHELPER_ROOT} from './infrastructure/const';
+import {PKUHELPER_ROOT} from './infrastructure/const';
 
 import './App.css';
 
@@ -33,7 +33,7 @@ const LOADING_TEXT={
     'idle':'点击加载',
 };
 
-const API_BASE=`${PKUHELPER_ROOT}isop_proxy/classroom_today?appKey=${ISOP_APPKEY}&buildingName={building}`;
+const API_BASE=`${PKUHELPER_ROOT}api_xmcp/isop/classroom_today?buildingName={building}`;
 
 // https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
 function fetch_with_timeout(url, options, timeout=5000) {
