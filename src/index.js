@@ -5,6 +5,8 @@ import Title from './Title';
 
 import './index.css';
 
+import {register} from './serviceWorker';
+
 ReactDOM.render(
     <div>
         <Title />
@@ -13,3 +15,5 @@ ReactDOM.render(
         </div>
     </div>
     , document.getElementById('root'));
+
+register();

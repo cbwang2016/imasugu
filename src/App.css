@@ -2,6 +2,15 @@
     box-sizing: border-box;
 }
 
+body.root-dark-mode {
+    background-color: hsl(0,0%,5%);
+    color: var(--foreground-dark);
+}
+
+.root-dark-mode a {
+    color: #9bf;
+}
+
 .imasugu {
     user-select: none;
     margin: 0;
@@ -39,6 +48,10 @@
     border-bottom: 1px solid black;
 }
 
+.root-dark-mode .imasugu .imsg-pieces-list {
+    background-color: hsla(0,0%,25%,.9);
+}
+
 .imasugu .imsg-piece {
     box-sizing: border-box;
     width: 2.5em;
@@ -51,12 +64,22 @@
     border: 1px solid black;
 }
 
+.root-dark-mode .imasugu .imsg-piece:not(.imsg-piece-no) {
+    border: 1px solid var(--foreground-dark);
+}
+
 .imasugu .imsg-pieces-list .imsg-piece {
     cursor: ew-resize;
 }
 
 .imasugu .imsg-piece-highlight {
     background-color: yellow;
+    color: black;
+}
+
+.root-dark-mode .imasugu .imsg-piece-highlight {
+    background-color: hsl(140,100%,25%);
+    color: white;
 }
 
 .imasugu .imsg-building-bar {
@@ -66,6 +89,10 @@
     top: 3.5em;
     z-index: 5;
     background-color: rgba(255,255,255,.9);
+}
+
+.root-dark-mode .imasugu .imsg-building-bar {
+    background-color: hsla(0,0%,15%,.9);
 }
 
 .imasugu .imsg-reload {
@@ -81,6 +108,10 @@
 
 .imasugu .imsg-text-major {
     color: #bb0000;
+}
+
+.root-dark-mode .imasugu .imsg-text-major {
+    color: #ff9999;
 }
 
 .imasugu .imsg-desc-text small {

@@ -2,6 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import {PKUHELPER_ROOT} from './infrastructure/const';
 
 import './App.css';
+import {listen_darkmode} from './infrastructure/functions';
 
 const BLACKLIST={
     '理教': ['109','111','308'],
@@ -50,6 +51,7 @@ function Title() {
         <div>
             <br />
             <p>以下为今日空闲教室，点击或拖拽下面的方框来筛选时间。</p>
+            <br />
         </div>
     );
 }
@@ -168,6 +170,24 @@ function Footer(props) {
                 下列不允许自习或需要预约的教室未显示：
                 {Object.keys(props.blacklist).map((k)=>props.blacklist[k].map((r)=>k+r).join('、')).filter((x)=>x).join('、')}
             </p>
+            <br />
+            <p>
+                <a onClick={()=>{
+                    if('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations()
+                            .then((registrations)=>{
+                                for(let registration of registrations) {
+                                    console.log('unregister',registration);
+                                    registration.unregister();
+                                }
+                            });
+                    }
+                    setTimeout(()=>{
+                        window.location.reload(true);
+                    },200);
+                }}>强制检查更新</a>&nbsp;
+                ([{process.env.REACT_APP_BUILD_INFO||'---'}] {process.env.NODE_ENV})
+            </p>
             <p>Based on Project <b>imasugu!</b> by @xmcp</p>
             <p>
                 基于&nbsp;
@@ -182,6 +202,7 @@ function Footer(props) {
 class App extends Component {
     constructor(props) {
         super(props);
+        listen_darkmode(undefined);
         function mk_obj(keys,value) {
             let res={};
             for(let key of keys)
