@@ -1,4 +1,7 @@
 import React, {Component, PureComponent} from 'react';
+import {TIMEPIECES_DESC} from './const';
+
+import './Pieces.css';
 
 export class PiecesBar extends PureComponent {
     constructor(props) {
@@ -49,6 +52,7 @@ export class PiecesBar extends PureComponent {
                     <span key={p} data-pid={p} className={'imsg-piece'+(p>=sel_mi && p<=sel_ma ? ' imsg-piece-highlight' : '')}
                           onMouseDown={()=>{this.on_click(p)}} onMouseMove={(e)=>{if(e.buttons===1) this.on_drag(p)}}
                           onTouchStart={()=>{this.on_click(p)}} onTouchMoveCapture={(e)=>{this.fix_coord(e)}}>
+                        <span className="imsg-desc-popup">{TIMEPIECES_DESC[p]}</span>
                         {p}
                     </span>
                 ))}

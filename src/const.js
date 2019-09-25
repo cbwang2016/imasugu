@@ -21,5 +21,14 @@ export const TIMEPIECES=[
     [18,40], [19,40], [20,40],
     [999,999],
 ];
+export const TIMEPIECES_DESC=[
+    null,
+    '8:00', null,
+    '10:10', null,
+    '13:00', null,
+    '15:10', null, null,
+    '18:40', null, null,
+    null,
+];
 
 export const API_BASE=`${PKUHELPER_ROOT}api_xmcp/isop/classroom_today?buildingName={building}`;
