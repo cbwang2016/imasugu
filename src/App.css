@@ -82,7 +82,7 @@ a {
 }
 
 .root-dark-mode .imasugu .imsg-piece-highlight {
-    background-color: hsl(140,100%,25%);
+    background-color: #117711;
     color: white;
 }
 
@@ -115,7 +115,7 @@ a {
 }
 
 .root-dark-mode .imasugu .imsg-text-major {
-    color: #ff9999;
+    color: #aaeeaa;
 }
 
 .imasugu .imsg-desc-text small {
