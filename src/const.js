@@ -10,7 +10,6 @@ export const BLACKLIST={
     '地学': [],
 };
 export const BUILDINGS=['理教','一教','二教','三教','四教','文史','地学'];
-export const AUTO_LOADING=['理教','二教'];
 
 export const TIMEPIECES=[
     [-1,-1],

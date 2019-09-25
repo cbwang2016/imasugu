@@ -1,10 +1,11 @@
 import React, { Component, PureComponent } from 'react';
 import {PKUHELPER_ROOT} from './infrastructure/const';
-import {BLACKLIST, BUILDINGS, AUTO_LOADING, TIMEPIECES, API_BASE} from './const';
+import {BLACKLIST, BUILDINGS, TIMEPIECES, API_BASE} from './const';
 import {PiecesBar, Details} from './Pieces';
 
 import './App.css';
 import {listen_darkmode} from './infrastructure/functions';
+import {load_config, Config} from './config';
 
 const LOADING_TEXT={
     'done':'',
@@ -43,6 +44,8 @@ function Footer(props) {
                 {Object.keys(props.blacklist).map((k)=>props.blacklist[k].map((r)=>k+r).join('、')).filter((x)=>x).join('、')}
             </p>
             <br />
+            <Config />
+            <br />
             <p>
                 <a onClick={()=>{
                     if('serviceWorker' in navigator) {
@@ -74,7 +77,9 @@ function Footer(props) {
 export class App extends Component {
     constructor(props) {
         super(props);
+        load_config();
         listen_darkmode(undefined);
+
         function mk_obj(keys,value) {
             let res={};
             for(let key of keys)
@@ -91,7 +96,7 @@ export class App extends Component {
     }
 
     static get_start_piece() {
-        //return 5;//////
+        //return 1;//////
         let now=new Date();
         for(let i=1;i<TIMEPIECES.length-1;i++)
             if(now.getHours()<TIMEPIECES[i][0] || (now.getHours()===TIMEPIECES[i][0] && now.getMinutes()<TIMEPIECES[i][1]))
@@ -165,7 +170,7 @@ export class App extends Component {
     }
 
     componentDidMount() {
-        AUTO_LOADING.forEach((name)=>{
+        window.config.auto_loading.forEach((name)=>{
             this.toggle_collapse(name);
         });
     }
