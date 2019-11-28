@@ -2,6 +2,19 @@
     box-sizing: border-box;
 }
 
+body.root-dark-mode {
+    background-color: hsl(0,0%,5%);
+    color: var(--foreground-dark);
+}
+
+a {
+    color: #00c;
+}
+
+.root-dark-mode a {
+    color: #9bf;
+}
+
 .imasugu {
     user-select: none;
     margin: 0;
@@ -16,97 +29,6 @@
 
 .imasugu .imsg-title {
     margin-top: 1em;
-}
-
-.imasugu .imsg-loading-status {
-    margin-left: 1em;
-    font-weight: normal;
-    opacity: .6;
-    font-size: .8em;
-}
-
-.imasugu .imsg-pieces-list, .imsg-room {
-    white-space: nowrap;
-    overflow-x: hidden;
-}
-
-.imasugu .imsg-pieces-list {
-    position: sticky;
-    top: 0;
-    padding: .5em 0;
-    background-color: rgba(255,255,255,.9);
-    z-index: 10;
-    border-bottom: 1px solid black;
-}
-
-.imasugu .imsg-piece {
-    box-sizing: border-box;
-    width: 2.5em;
-    display: inline-block;
-    margin: 3px;
-}
-
-.imasugu .imsg-piece:not(.imsg-piece-no) {
-    text-align: center;
-    border: 1px solid black;
-}
-
-.imasugu .imsg-piece-highlight {
-    background-color: yellow;
-}
-
-.imasugu .imsg-building-bar {
-    font-weight: bold;
-    padding: .5em;
-    position: sticky;
-    top: 3.5em;
-    background-color: rgba(255,255,255,.9);
-}
-
-.imasugu .imsg-reload {
-    margin-left: 1em;
-}
-
-.imasugu .imsg-desc-text {
-    padding-left: .5em;
-    display: inline-block;
-    width: 5em;
-    font-weight: bold;
-}
-
-.imasugu .imsg-text-major {
-    color: #bb0000;
-}
-
-.imasugu .imsg-desc-text small {
-    font-size: .6em;
-    opacity: .6;
-    font-weight: normal;
-}
-
-.imasugu .imsg-details-block {
-    max-height: 0;
-    overflow-y: hidden;
-    opacity: 0;
-}
-
-.imasugu .imsg-details-block.imsg-details-block-show {
-    transition: opacity .5s ease-out, max-height 1.5s linear;
-    opacity: 1;
-    max-height: 5000px;
-}
-
-.imasugu .imsg-details-block .imsg-piece {
-    transition: background-color .2s;
-}
-
-.imasugu .imsg-room {
-    transition: max-height .2s;
-    max-height: 2.5em;
-    overflow-y: hidden;
-}
-.imasugu .imsg-room-hidden {
-    max-height: 0;
 }
 
 .imasugu .imsg-room-blacklist {

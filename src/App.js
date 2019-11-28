@@ -1,27 +1,11 @@
 import React, { Component, PureComponent } from 'react';
+import {PKUHELPER_ROOT} from './infrastructure/const';
+import {BLACKLIST, BUILDINGS, TIMEPIECES, API_BASE} from './const';
+import {PiecesBar, Details} from './Pieces';
+
 import './App.css';
-
-const BLACKLIST={
-    '理教': ['109','111','308'],
-    '一教': [],
-    '二教': ['514','523','518','526','530','521','524','528','529','516'],
-    '三教': [],
-    '四教': ['405','407','409','503','504','505','506','507','509','511'],
-    '文史': [],
-    '地学': [],
-};
-const BUILDINGS=['理教','一教','二教','三教','四教','文史','地学'];
-const AUTO_LOADING=['理教','二教'];
-
-const TIMEPIECES=[
-    [-1,-1],
-    [8,0], [9,0],
-    [10,10], [11,10],
-    [13,0], [14,0],
-    [15,10], [16,10], [17,0],
-    [18,40], [19,40], [20,40],
-    [999,999],
-];
+import {listen_darkmode} from './infrastructure/functions';
+import {load_config, Config} from './config';
 
 const LOADING_TEXT={
     'done':'',
@@ -30,8 +14,6 @@ const LOADING_TEXT={
     'failed':'加载失败',
     'idle':'点击加载',
 };
-
-const API_BASE='//imsg.pi.xmcp.ml/classroom_proxy/retrClassRoomFree.do?buildingName={building}&time='+encodeURIComponent('今天');
 
 // https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
 function fetch_with_timeout(url, options, timeout=5000) {
@@ -46,112 +28,11 @@ function fetch_with_timeout(url, options, timeout=5000) {
 function Title() {
     return (
         <div>
-            <p className="imsg-title">Project <b>imasugu!</b> by @xmcp</p>
+            <br />
+            <p>以下为今日空闲教室，点击或拖拽下面的方框来筛选时间。</p>
+            <br />
         </div>
     );
-}
-
-class PiecesBar extends PureComponent {
-    constructor(props) {
-        super(props);
-        let sel_prop=props.initial;
-        props.do_setfilter(sel_prop,sel_prop);
-        this.state={
-            sel_base: sel_prop,
-            sel_end: sel_prop,
-        };
-    }
-
-    sel_minmax() {
-        let {sel_base: a, sel_end: b}=this.state;
-        return a<=b ? [a,b] : [b,a];
-    }
-
-    on_click(p) {
-        this.setState({
-            sel_base: p,
-            sel_end: p,
-        },()=>{
-            let [sel_mi,sel_ma]=this.sel_minmax();
-            this.props.do_setfilter(sel_mi,sel_ma);
-        });
-    }
-    on_drag(p) {
-        this.setState({
-            sel_end: p,
-        },()=>{
-            let [sel_mi,sel_ma]=this.sel_minmax();
-            this.props.do_setfilter(sel_mi,sel_ma);
-        });
-    }
-    fix_coord(e) {
-        if(e.touches.length===0) return;
-        let elem=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);
-        if(elem && elem.dataset['pid'])
-            this.on_drag(elem.dataset['pid']);
-    }
-
-    render() {
-        let [sel_mi,sel_ma]=this.sel_minmax();
-        return (
-            <div className="imsg-pieces-list">
-                <span className="imsg-desc-text">筛选时间</span>
-                {this.props.pieces.map((p)=>(
-                    <span key={p} data-pid={p} className={'imsg-piece'+(p>=sel_mi && p<=sel_ma ? ' imsg-piece-highlight' : '')}
-                            onMouseDown={()=>{this.on_click(p)}} onMouseMove={(e)=>{if(e.buttons===1) this.on_drag(p)}}
-                            onTouchStart={()=>{this.on_click(p)}} onTouchMoveCapture={(e)=>{this.fix_coord(e)}}>
-                        {p}
-                    </span>
-                ))}
-                <span role="img" className="imsg-piece" aria-label="NIGHT">😎</span>
-            </div>
-        )
-    }
-}
-
-class PieceBox extends PureComponent {
-    render() {
-        return (
-            <span className={'imsg-piece'+(this.props.variant ? ' '+this.props.variant : '')}>
-                {(this.props.text||'').substr(1)}
-            </span>
-        );
-    }
-}
-
-class Details extends PureComponent {
-    render() {
-        if(this.props.data===null) return (
-            <div className="imsg-details-block" />
-        );
-
-        let filter=this.props.filter.map((f)=>'c'+f);
-        let pieces=this.props.pieces.map((p)=>'c'+p);
-        let building=this.props.data||[];
-
-        return (
-            <div className={'imsg-details-block'+(this.props.collapsed ? '' : ' imsg-details-block-show')}>
-                {building.map((b)=>
-                    <div key={b.room} className={'imsg-room'+((
-                                this.props.blacklist.indexOf(b.room)===-1 && filter.every((f)=>b[f]==='')
-                            ) ? ' imsg-room-visible' : ' imsg-room-hidden')}>
-                        <span className="imsg-desc-text">
-                            <span className="imsg-text-major">{b.room.charAt(0)}</span>
-                            {b.room.substr(1)}&nbsp;
-                            <small>{b.cap}人</small>
-                        </span>
-                        {pieces.map((p)=>(
-                            b[p]==='' ? (
-                                <PieceBox key={p} variant={filter.indexOf(p)!==-1 ? 'imsg-piece-highlight' : null} text={p} />
-                            ) : (
-                                <PieceBox key={p} variant="imsg-piece-no" />
-                            )
-                        ))}
-                    </div>
-                )}
-            </div>
-        );
-    }
 }
 
 function Footer(props) {
@@ -159,19 +40,46 @@ function Footer(props) {
         <div>
             <br />
             <p className="imsg-room-blacklist">
-                教室黑名单：
+                下列不允许自习或需要预约的教室未显示：
                 {Object.keys(props.blacklist).map((k)=>props.blacklist[k].map((r)=>k+r).join('、')).filter((x)=>x).join('、')}
             </p>
-            <p>你应该发现了在页面顶部可以点击并拖拽来筛选</p>
-            <p>数据来源于校内信息门户 &copy;xmcp</p>
+            <br />
+            <Config />
+            <br />
+            <p>
+                <a onClick={()=>{
+                    if('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations()
+                            .then((registrations)=>{
+                                for(let registration of registrations) {
+                                    console.log('unregister',registration);
+                                    registration.unregister();
+                                }
+                            });
+                    }
+                    setTimeout(()=>{
+                        window.location.reload(true);
+                    },200);
+                }}>强制检查更新</a>&nbsp;
+                ([{process.env.REACT_APP_BUILD_INFO||'---'}] {process.env.NODE_ENV})
+            </p>
+            <p>Based on Project <b>imasugu!</b> by @xmcp</p>
+            <p>
+                基于&nbsp;
+                <a href="https://www.gnu.org/licenses/gpl-3.0.zh-cn.html" target="_blank">GPLv3</a>
+                &nbsp;协议在 <a href="https://github.com/pkuhelper-web/imasugu" target="_blank">GitHub</a> 开源
+            </p>
             <br />
         </div>
     )
 }
 
-class App extends Component {
+export class App extends Component {
     constructor(props) {
         super(props);
+        load_config();
+        listen_darkmode(undefined);
+
         function mk_obj(keys,value) {
             let res={};
             for(let key of keys)
@@ -188,7 +96,7 @@ class App extends Component {
     }
 
     static get_start_piece() {
-        //return 5;//////
+        //return 1;//////
         let now=new Date();
         for(let i=1;i<TIMEPIECES.length-1;i++)
             if(now.getHours()<TIMEPIECES[i][0] || (now.getHours()===TIMEPIECES[i][0] && now.getMinutes()<TIMEPIECES[i][1]))
@@ -220,7 +128,7 @@ class App extends Component {
                 return state;
             });
 
-            fetch_with_timeout((this.props.api_base||API_BASE).replace('{building}',encodeURIComponent(name)))
+            fetch_with_timeout(API_BASE.replace('{building}',encodeURIComponent(name)))
                 .then((res)=>res.json())
                 .then((json)=>{
                     if(Array.isArray(json))
@@ -262,7 +170,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        AUTO_LOADING.forEach((name)=>{
+        window.config.auto_loading.forEach((name)=>{
             this.toggle_collapse(name);
         });
     }
@@ -297,5 +205,3 @@ class App extends Component {
         );
     }
 }
-
-export default App;
